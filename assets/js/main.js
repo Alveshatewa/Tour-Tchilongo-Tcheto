@@ -352,7 +352,36 @@
     if (faqLink) faqLink.href = waLink('Olá! Tenho uma dúvida que não encontrei nas perguntas frequentes.');
   })();
 
+
+  (function eventModalInit() {
+    const modal = $('#eventModal');
+    if (!modal) return;
+    const SEEN_KEY = 'ttt-excursao-popup-seen';
+
+    function open() {
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      sessionStorage.setItem(SEEN_KEY, '1');
+    }
+
+    $$('[data-modal-close]', modal).forEach(el => el.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
+    });
+
+    if (!sessionStorage.getItem(SEEN_KEY)) {
+      setTimeout(open, 500);
+    }
+  })();
+
   const yearEl = $('#year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 })();
+
